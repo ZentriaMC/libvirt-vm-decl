@@ -15,16 +15,22 @@
         "x86_64-linux"
       ];
     in
-    flake-utils.lib.eachSystem supportedSystems (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      rec {
-        devShell = pkgs.mkShell {
-          nativeBuildInputs = [
-            pkgs.yq
-            pkgs.libxml2.bin
-          ];
-        };
-      });
+    flake-utils.lib.eachSystem supportedSystems
+      (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        rec {
+          devShell = pkgs.mkShell {
+            nativeBuildInputs = [
+              pkgs.yq
+              pkgs.libxml2.bin
+            ];
+          };
+        })
+    // {
+      lib = {
+        units = import ./units.nix;
+      };
+    };
 }
